@@ -208,8 +208,8 @@ export default function CardWithIllustration() {
                 rounded={"full"}
                 variant='filled'
               >
-                <option value='option1'>Hazmat</option>
-                <option value='option2'>Non-Hazmat</option>
+                <option value='option1'>Non-Hazmat</option>
+                <option value='option2'>Hazmat</option>
               </Select>
             </FormControl>
           </HStack>
