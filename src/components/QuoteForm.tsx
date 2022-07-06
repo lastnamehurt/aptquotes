@@ -18,6 +18,9 @@ import {
   Radio,
   RadioGroup,
   Link,
+  Select,
+  Divider,
+  Textarea,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import apt from "../aptlogo.png";
@@ -126,26 +129,8 @@ export default function CardWithIllustration() {
             />
             {/* <FormHelperText>We'll never share your email.</FormHelperText> */}
           </FormControl>
-          <FormControl>
-            <FormLabel htmlFor='containerType'>Container Type</FormLabel>
-            <Input
-              id={"containerType"}
-              //   onChange={(e) => setMileage(+e.target.value)}
-              placeholder={"40 HC"}
-              color={useColorModeValue("gray.800", "gray.200")}
-              bg={useColorModeValue("gray.100", "gray.600")}
-              rounded={"full"}
-              isRequired={true}
-              border={0}
-              _focus={{
-                bg: useColorModeValue("gray.200", "gray.800"),
-                outline: "none",
-              }}
-            />
-          </FormControl>
-          {/* Miles */}
           <FormControl isRequired>
-            <FormLabel htmlFor='miles'>Estimated Distince (miles)</FormLabel>
+            <FormLabel htmlFor='miles'>Estimated Distance (miles)</FormLabel>
             <Input
               id={"miles"}
               type={"number"}
@@ -164,6 +149,75 @@ export default function CardWithIllustration() {
               }}
             />
           </FormControl>
+          <Stack>
+            <Divider orientation='horizontal' />
+            {/* <Text align={"center"}>Compliance</Text> */}
+          </Stack>
+          <FormControl>
+            <FormLabel htmlFor='containerType'>Container Type</FormLabel>
+            <Select
+              placeholder='Select option'
+              rounded={"full"}
+              variant='filled'
+            >
+              <option value='option1'>20' DR</option>
+              <option value='option2'>40' DR</option>
+              <option value='option3'>40' HC</option>
+              <option value='option3'>45' DR</option>
+              <option value='option3'>20' RF</option>
+              <option value='option3'>40' RF</option>
+              <option value='option3'>Other</option>
+              {/* <option value='option3'>CMA: 20' DR</option>
+              <option value='option3'>CMA: 40' DR</option>
+              <option value='option3'>CMA: 40' HC</option>
+              <option value='option3'>CMA: 45' DR</option> */}
+            </Select>
+            {/* <Input
+              id={"containerType"}
+              //   onChange={(e) => setMileage(+e.target.value)}
+              placeholder={"40 HC"}
+              color={useColorModeValue("gray.800", "gray.200")}
+              bg={useColorModeValue("gray.100", "gray.600")}
+              rounded={"full"}
+              isRequired={true}
+              border={0}
+              _focus={{
+                bg: useColorModeValue("gray.200", "gray.800"),
+                outline: "none",
+              }}
+            /> */}
+          </FormControl>
+          {/* Miles */}
+          <HStack>
+            <FormControl id='weight' isRequired>
+              <FormLabel>Legal Weight</FormLabel>
+              <Select
+                placeholder='Select option'
+                rounded={"full"}
+                variant='filled'
+              >
+                <option value='option1'>Yes</option>
+                <option value='option2'>No</option>
+              </Select>
+            </FormControl>
+
+            <FormControl id='hazmat' isRequired>
+              <FormLabel>Hazmat</FormLabel>
+              <Select
+                placeholder='Select option'
+                rounded={"full"}
+                variant='filled'
+              >
+                <option value='option1'>Hazmat</option>
+                <option value='option2'>Non-Hazmat</option>
+              </Select>
+            </FormControl>
+          </HStack>
+          <Stack>
+            <Divider orientation='horizontal' />
+            <Text align={"center"}>Additional Details</Text>
+          </Stack>
+          <Textarea />
           {/* Truck Size */}
           {/* <FormControl as='fieldset'>
             <FormLabel as='legend'>Truck Size</FormLabel>
