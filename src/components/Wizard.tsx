@@ -1,0 +1,55 @@
+import { Flex, Heading, Button } from "@chakra-ui/react";
+import { Step, Steps, useSteps } from "chakra-ui-steps";
+import CardWithIllustration from "./QuoteForm";
+
+const steps = [
+  { label: "Step 1", description: "Basic Information" },
+  { label: "Step 2", description: "Load Details" },
+  { label: "Step 3", description: "Miscellaneous" },
+];
+
+export const VerticalLabels = () => {
+  const { nextStep, prevStep, reset, activeStep } = useSteps({
+    initialStep: 0,
+  });
+  return (
+    <Flex flexDir='column' width='100%'>
+      <Steps labelOrientation='vertical' activeStep={activeStep}>
+        {steps.map(({ label, description }, index) => (
+          <Step label={label} key={label} description={description}>
+            <Flex py={4} justify={"center"}>
+              <CardWithIllustration />
+            </Flex>
+          </Step>
+        ))}
+      </Steps>
+      {activeStep === steps.length ? (
+        <Flex px={4} py={4} width='100%' flexDirection='column'>
+          <Heading fontSize='xl' textAlign='center'>
+            Woohoo! All steps completed!
+          </Heading>
+          <Button mx='auto' mt={6} size='sm' onClick={reset}>
+            Reset
+          </Button>
+        </Flex>
+      ) : (
+        <Flex width='100%' justify='flex-end'>
+          <Button
+            isDisabled={activeStep === 0}
+            mr={4}
+            onClick={prevStep}
+            size='sm'
+            variant='ghost'
+          >
+            Prev
+          </Button>
+          <Button size='sm' onClick={nextStep}>
+            {activeStep === steps.length - 1 ? "Finish" : "Next"}
+          </Button>
+        </Flex>
+      )}
+    </Flex>
+  );
+};
+
+export default VerticalLabels;
