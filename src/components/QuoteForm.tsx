@@ -17,6 +17,7 @@ import {
   HStack,
   Radio,
   RadioGroup,
+  Link,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import ldf from "../ldf.png";
@@ -125,6 +126,23 @@ export default function CardWithIllustration() {
             />
             {/* <FormHelperText>We'll never share your email.</FormHelperText> */}
           </FormControl>
+          <FormControl>
+            <FormLabel htmlFor='containerType'>Container Type</FormLabel>
+            <Input
+              id={"containerType"}
+              //   onChange={(e) => setMileage(+e.target.value)}
+              placeholder={"40 HC"}
+              color={useColorModeValue("gray.800", "gray.200")}
+              bg={useColorModeValue("gray.100", "gray.600")}
+              rounded={"full"}
+              isRequired={true}
+              border={0}
+              _focus={{
+                bg: useColorModeValue("gray.200", "gray.800"),
+                outline: "none",
+              }}
+            />
+          </FormControl>
           {/* Miles */}
           <FormControl isRequired>
             <FormLabel htmlFor='miles'>Estimated Distince (miles)</FormLabel>
@@ -156,35 +174,63 @@ export default function CardWithIllustration() {
               </HStack>
             </RadioGroup>
           </FormControl> */}
-          <FormControl>
-            <FormLabel htmlFor='containerType'>Container Type</FormLabel>
-            <Input
-              id={"containerType"}
-              //   onChange={(e) => setMileage(+e.target.value)}
-              placeholder={"40 HC"}
-              color={useColorModeValue("gray.800", "gray.200")}
-              bg={useColorModeValue("gray.100", "gray.600")}
-              rounded={"full"}
-              isRequired={true}
-              border={0}
-              _focus={{
-                bg: useColorModeValue("gray.200", "gray.800"),
-                outline: "none",
-              }}
-            />
-          </FormControl>
           <Text as={"u"} align={"center"} fontSize={"xl"}>
             {companyName}
           </Text>
-          <Text align={"center"}>Estimated Quote</Text>
-          <Text align={"center"}>
-            {formatter.format(
-              +mileage !== 0 ? +mileage * 0.71 + 2200 + 40 + 250 : 0
-            )}
+          <Total mileage={mileage} />
+        </Stack>
+        <Stack align={"center"}>
+          <Text>
+            {/* Save Quote{" "} */}
+            <Link color='teal.500' href='#'>
+              Email Quote
+            </Link>
+          </Text>
+          <Text>
+            <Link color='teal.500' href='https://drivewithapt.com'>
+              Home
+            </Link>
           </Text>
         </Stack>
       </Stack>
     </Flex>
+  );
+}
+
+function Total(props: { mileage: any }) {
+  return +props.mileage !== 0 ? (
+    <>
+      <Charges mileage={props.mileage} />
+      <Text>
+        <strong>
+          {formatter.format(
+            +props.mileage !== 0 ? +props.mileage * 0.71 + 2200 + 40 + 250 : 0
+          )}{" "}
+          Total
+        </strong>
+      </Text>
+    </>
+  ) : (
+    <Text></Text>
+  );
+}
+function Charges(props: { mileage: any }) {
+  const { mileage } = props;
+  return (
+    <Stack>
+      <Text fontSize='xs'>
+        $2,200.00 <strong>Line Haul</strong>
+      </Text>
+      <Text fontSize='xs'>
+        $220.00 <strong>FSC</strong>
+      </Text>
+      <Text fontSize='xs'>
+        $40.00 <strong>Chassis Rental Fee</strong>
+      </Text>
+      <Text fontSize='xs'>
+        $250.00 <strong>PrePull Fee</strong>
+      </Text>
+    </Stack>
   );
 }
 
