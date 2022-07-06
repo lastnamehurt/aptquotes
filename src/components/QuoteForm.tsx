@@ -20,7 +20,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import ldf from "../ldf.png";
+import apt from "../aptlogo.png";
 
 const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -51,7 +51,7 @@ export default function CardWithIllustration() {
         spacing={8}
         align={"center"}
       >
-        <Image src={ldf} w={"fill"} h={48} alt='powered by Last Day Freight' />
+        <Image src={apt} w={"fill"} h={48} alt='powered by Last Day Freight' />
         <Stack align={"center"} spacing={1}>
           <Heading
             textTransform={"uppercase"}
