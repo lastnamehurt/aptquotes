@@ -110,13 +110,12 @@ export default function CardWithIllustration() {
         response.json()
         if (response.ok) {
           clean();
-          alert("CLEANUPTIME")
           console.log(response)
           handleClose()
 
           return (toast({
             title: 'Quote Sent',
-            description: "Please check your email",
+            description: "A Team Member will reach out soon!",
             status: 'success',
             duration: 9000,
             isClosable: true,
