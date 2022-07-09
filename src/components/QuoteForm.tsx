@@ -22,6 +22,18 @@ import {
   Divider,
   Textarea,
   VisuallyHiddenInput,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import apt from "../aptlogo.png";
@@ -47,15 +59,30 @@ export default function CardWithIllustration() {
   const [legalWeight, setLegalWeight] = useState("Yes");
   const [isHazmat, setIsHazmat] = useState("Non-Hazmat");
   const [additionalDetails, setAdditionalDetails] = useState("");
+  const [show, setShow] = useState(false);
 
-  function handleTotal() {
-    const _total = mileage !== 0 ? +mileage * 0.71 + 2200 + 40 + 250 : 0
-    setTotal(_total)
-    console.log(`Set total ${total}`)
-    return total
+  const toast = useToast()
+
+
+  // axios.defaults.xsrfCookieName = 'csrftoken'
+  // axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  function clean() {
+    setCompanyName("")
+    setEmail("")
+    setTotal(0)
+    setMileage(0)
+    setPhoneNumber("")
+    setContainerType("")
+    setLegalWeight("YES")
+    setIsHazmat("Non-Hazmat")
+    setAdditionalDetails("")
   }
 
-  function handleSubmit() {
+  let handleSubmit = async (e: any) => {
+    e.preventDefault();
     console.log("Submitting")
     // just a lil processing to convert human-readable values to db values
     const isLegalWeight = legalWeight === 'Yes' ? true : false
@@ -79,8 +106,25 @@ export default function CardWithIllustration() {
       })
     };
     fetch('https://apt-quotes-api.herokuapp.com/api/quotes/', requestOptions)
-      .then(response => response.json())
-      .then(data => console.log(data))
+      .then(response => {
+        response.json()
+        if (response.ok) {
+          clean();
+          alert("CLEANUPTIME")
+          console.log(response)
+          handleClose()
+
+          return (toast({
+            title: 'Quote Sent',
+            description: "Please check your email",
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
+          )
+        }
+      }
+      )
   }
 
   return (
@@ -251,7 +295,7 @@ export default function CardWithIllustration() {
             </HStack>
             <Stack>
               <Divider orientation='horizontal' />
-              <FormControl id='additionalDetails' isRequired>
+              <FormControl id='additionalDetails'>
                 <FormLabel>Additional Details</FormLabel>
                 <Textarea value={additionalDetails}
                   onChange={(e) => setAdditionalDetails(e.target.value)}>
@@ -274,9 +318,26 @@ export default function CardWithIllustration() {
         <Stack align={"center"}>
           <Text>
             {/* Save Quote{" "} */}
-            <Button color='teal.500' type='submit' id="quoteForm" onClick={handleSubmit}>
+            <Button color='teal.500' type='submit' id="quoteForm" onClick={handleShow}>
               Email Quote
             </Button>
+            <Modal isOpen={show} onClose={handleClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Quote Estimate</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  We will send this quote to <strong>{email}</strong>. Press "Send Email" to continue.
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button colorScheme='red' mr={3} onClick={handleClose}>
+                    Close
+                  </Button>
+                  <Button variant='solid' colorScheme="blue" onClick={handleSubmit}>Send Email</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </Text>
           <Text>
             <Link color='teal.500' href='https://drivewithapt.com'>
