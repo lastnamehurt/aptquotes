@@ -53,7 +53,7 @@ export default function CardWithIllustration() {
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   let [total, setTotal] = useState(0);
-  const [mileage, setMileage] = useState(0);
+  const [mileage, setMileage] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [containerType, setContainerType] = useState("");
   const [legalWeight, setLegalWeight] = useState("Yes");
@@ -73,7 +73,7 @@ export default function CardWithIllustration() {
     setCompanyName("")
     setEmail("")
     setTotal(0)
-    setMileage(0)
+    setMileage("")
     setPhoneNumber("")
     setContainerType("")
     setLegalWeight("YES")
@@ -87,7 +87,7 @@ export default function CardWithIllustration() {
     // just a lil processing to convert human-readable values to db values
     const isLegalWeight = legalWeight === 'Yes' ? true : false
     const isThisHazmat = isHazmat === 'Non-Hazmat' ? false : true
-    total = mileage !== 0 ? +mileage * 0.71 + 2200 + 40 + 250 : 0
+    total = +mileage !== 0 ? +mileage * 0.71 + 2200 + 40 + 250 : 0
     console.log(`Total is ${total}`)
 
     const requestOptions = {
@@ -227,7 +227,7 @@ export default function CardWithIllustration() {
                 type={"number"}
                 variant={"outline"}
                 value={mileage}
-                onChange={(e) => setMileage(+e.target.value)}
+                onChange={(e) => setMileage(e.target.value)}
                 placeholder={"i.e. 350"}
                 color={useColorModeValue("gray.800", "gray.200")}
                 bg={useColorModeValue("gray.100", "gray.600")}
