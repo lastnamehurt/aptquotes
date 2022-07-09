@@ -78,10 +78,9 @@ export default function CardWithIllustration() {
         additional_details: additionalDetails
       })
     };
-    fetch('http://localhost:8000/api/quotes/', requestOptions)
+    fetch('https://apt-quotes-api.herokuapp.com/api/quotes/', requestOptions)
       .then(response => response.json())
       .then(data => console.log(data))
-    // .then(data => this.setState({ postId: data.id }));
   }
 
   return (
@@ -296,10 +295,10 @@ function Total(props: { mileage: any }) {
   return +props.mileage !== 0 ? (
     <>
       <Charges mileage={props.mileage} />
+      <Divider />
       <Text>
         <strong>
-          {total}
-          Total
+          {total} Total
         </strong>
       </Text>
     </>
