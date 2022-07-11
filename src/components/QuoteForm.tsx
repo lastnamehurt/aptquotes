@@ -17,9 +17,22 @@ import {
   HStack,
   Radio,
   RadioGroup,
+  Link,
+  Select,
+  Divider,
+  Textarea,
+  VisuallyHiddenInput,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import ldf from "../ldf.png";
+import apt from "../aptlogo.png";
 
 const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -30,17 +43,92 @@ const formatter = new Intl.NumberFormat("en-US", {
   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-export default function CardWithIllustration() {
+let theTotal: any;
+
+export default function QuoteForm() {
   const [companyName, setCompanyName] = useState("");
-  const [total, setTotal] = useState("0");
-  const [mileage, setMileage] = useState(0);
+  const [email, setEmail] = useState("");
+  let [total, setTotal] = useState(0);
+  const [mileage, setMileage] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [containerType, setContainerType] = useState("");
+  const [legalWeight, setLegalWeight] = useState("Yes");
+  const [isHazmat, setIsHazmat] = useState("Non-Hazmat");
+  const [additionalDetails, setAdditionalDetails] = useState("");
+  const [show, setShow] = useState(false);
+
+  const toast = useToast()
+
+
+  // axios.defaults.xsrfCookieName = 'csrftoken'
+  // axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  function clean() {
+    setCompanyName("")
+    setEmail("")
+    setTotal(0)
+    setMileage("")
+    setPhoneNumber("")
+    setContainerType("")
+    setLegalWeight("YES")
+    setIsHazmat("Non-Hazmat")
+    setAdditionalDetails("")
+  }
+
+  let handleSubmit = async (e: any) => {
+    e.preventDefault();
+    console.log("Submitting")
+    // just a lil processing to convert human-readable values to db values
+    const isLegalWeight = legalWeight === 'Yes' ? true : false
+    const isThisHazmat = isHazmat === 'Non-Hazmat' ? false : true
+    total = +mileage !== 0 ? +mileage * 0.71 + 2200 + 40 + 250 : 0
+    console.log(`Total is ${total}`)
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        company_name: companyName,
+        email_address: email,
+        estimated_distance: mileage,
+        total: total,
+        phone_number: phoneNumber,
+        container_type: containerType,
+        is_legal_weight: isLegalWeight,
+        is_hazmat: isThisHazmat,
+        additional_details: additionalDetails
+      })
+    };
+    fetch('https://apt-quotes-api.herokuapp.com/v1/quotes/', requestOptions)
+      .then(response => {
+        response.json()
+        if (response.ok) {
+          clean();
+          console.log(response)
+          handleClose()
+
+          return (toast({
+            title: 'Quote Sent',
+            description: "A Team Member will reach out soon!",
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
+          )
+        }
+      }
+      )
+  }
+
   return (
     <Flex
       minH={"100vh"}
       align={"center"}
       justify={"center"}
       py={12}
-      //   bg={useColorModeValue("gray.50", "gray.800")}
+    //   bg={useColorModeValue("gray.50", "gray.800")}
     >
       <Stack
         boxShadow={"2xl"}
@@ -50,7 +138,7 @@ export default function CardWithIllustration() {
         spacing={8}
         align={"center"}
       >
-        <Image src={ldf} w={"fill"} h={48} alt='powered by Last Day Freight' />
+        <Image src={apt} w={"fill"} h={48} alt='powered by Last Day Freight' />
         <Stack align={"center"} spacing={1}>
           <Heading
             textTransform={"uppercase"}
@@ -65,222 +153,225 @@ export default function CardWithIllustration() {
         </Stack>
         <Stack spacing={4} direction={{ base: "column" }} w={"full"}>
           {/* Company Name */}
-          <FormControl>
-            <FormLabel htmlFor='companyName'>Company Name</FormLabel>
-            <Input
-              id={"companyName"}
-              type={"text"}
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-              variant={"outline"}
-              placeholder={"i.e. All Purpose Trucking"}
-              color={useColorModeValue("gray.800", "gray.200")}
-              bg={useColorModeValue("gray.100", "gray.600")}
-              rounded={"full"}
-              isRequired={true}
-              border={0}
-              _focus={{
-                bg: useColorModeValue("gray.200", "gray.800"),
-                outline: "none",
-              }}
-            />
-          </FormControl>
-          {/* Email Address */}
-          <FormControl>
-            <FormLabel htmlFor='email'>Email address</FormLabel>
-            <Input
-              id={"email"}
-              variant={"outline"}
-              type={"email"}
-              placeholder={"john@doe.net"}
-              color={useColorModeValue("gray.800", "gray.200")}
-              bg={useColorModeValue("gray.100", "gray.600")}
-              rounded={"full"}
-              isRequired={true}
-              border={0}
-              _focus={{
-                bg: useColorModeValue("gray.200", "gray.800"),
-                outline: "none",
-              }}
-            />
-            <FormHelperText>We'll never share your email.</FormHelperText>
-          </FormControl>
-          {/* Phone Number */}
-          <FormControl>
-            <FormLabel htmlFor='phone'>Phone number</FormLabel>
-            <Input
-              id={"phone"}
-              variant={"outline"}
-              type={"phone"}
-              placeholder={"757-555-5555"}
-              color={useColorModeValue("gray.800", "gray.200")}
-              bg={useColorModeValue("gray.100", "gray.600")}
-              rounded={"full"}
-              isRequired={true}
-              border={0}
-              _focus={{
-                bg: useColorModeValue("gray.200", "gray.800"),
-                outline: "none",
-              }}
-            />
-            {/* <FormHelperText>We'll never share your email.</FormHelperText> */}
-          </FormControl>
-          {/* Miles */}
-          <FormControl isRequired>
-            <FormLabel htmlFor='miles'>Estimated Distince (miles)</FormLabel>
-            <Input
-              id={"miles"}
-              type={"number"}
-              variant={"outline"}
-              //   value={mileage}
-              onChange={(e) => setMileage(+e.target.value)}
-              placeholder={"i.e. 350"}
-              color={useColorModeValue("gray.800", "gray.200")}
-              bg={useColorModeValue("gray.100", "gray.600")}
-              rounded={"full"}
-              isRequired={true}
-              border={0}
-              _focus={{
-                bg: useColorModeValue("gray.200", "gray.800"),
-                outline: "none",
-              }}
-            />
-          </FormControl>
-          {/* Truck Size */}
-          {/* <FormControl as='fieldset'>
-            <FormLabel as='legend'>Truck Size</FormLabel>
-            <RadioGroup defaultValue='12ft'>
-              <HStack spacing='48px'>
-                <Radio value='12ft'>12ft</Radio>
-                <Radio value='20ft'>20ft</Radio>
-              </HStack>
-            </RadioGroup>
-          </FormControl> */}
-          <FormControl>
-            <FormLabel htmlFor='containerType'>Container Type</FormLabel>
-            <Input
-              id={"containerType"}
-              //   onChange={(e) => setMileage(+e.target.value)}
-              placeholder={"40 HC"}
-              color={useColorModeValue("gray.800", "gray.200")}
-              bg={useColorModeValue("gray.100", "gray.600")}
-              rounded={"full"}
-              isRequired={true}
-              border={0}
-              _focus={{
-                bg: useColorModeValue("gray.200", "gray.800"),
-                outline: "none",
-              }}
-            />
-          </FormControl>
+          <form id="quoteForm" onSubmit={handleSubmit}>
+            <FormControl>
+              <FormLabel htmlFor='companyName'>Company Name</FormLabel>
+              <Input
+                id={"companyName"}
+                type={"text"}
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                variant={"outline"}
+                placeholder={"i.e. All Purpose Trucking"}
+                color={useColorModeValue("gray.800", "gray.200")}
+                bg={useColorModeValue("gray.100", "gray.600")}
+                rounded={"full"}
+                isRequired={true}
+                border={0}
+                _focus={{
+                  bg: useColorModeValue("gray.200", "gray.800"),
+                  outline: "none",
+                }}
+              />
+            </FormControl>
+            {/* Email Address */}
+            <FormControl>
+              <FormLabel htmlFor='email'>Email address</FormLabel>
+              <Input
+                id={"email"}
+                variant={"outline"}
+                value={email} onChange={(e) => setEmail(e.target.value)}
+                type={"email"}
+                placeholder={"john@doe.net"}
+                color={useColorModeValue("gray.800", "gray.200")}
+                bg={useColorModeValue("gray.100", "gray.600")}
+                rounded={"full"}
+                isRequired={true}
+                border={0}
+                _focus={{
+                  bg: useColorModeValue("gray.200", "gray.800"),
+                  outline: "none",
+                }}
+              />
+              <FormHelperText>We'll never share your email.</FormHelperText>
+            </FormControl>
+            {/* Phone Number */}
+            <FormControl>
+              <FormLabel htmlFor='phoneNumber'>Phone number</FormLabel>
+              <Input
+                id={"phoneNumber"}
+                variant={"outline"}
+                type={"phone"}
+                value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder={"757-555-5555"}
+                color={useColorModeValue("gray.800", "gray.200")}
+                bg={useColorModeValue("gray.100", "gray.600")}
+                rounded={"full"}
+                isRequired={true}
+                border={0}
+                _focus={{
+                  bg: useColorModeValue("gray.200", "gray.800"),
+                  outline: "none",
+                }}
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel htmlFor='miles'>Estimated Distance (miles)</FormLabel>
+              <Input
+                id={"miles"}
+                type={"number"}
+                variant={"outline"}
+                value={mileage}
+                onChange={(e) => setMileage(e.target.value)}
+                placeholder={"i.e. 350"}
+                color={useColorModeValue("gray.800", "gray.200")}
+                bg={useColorModeValue("gray.100", "gray.600")}
+                rounded={"full"}
+                isRequired={true}
+                border={0}
+                _focus={{
+                  bg: useColorModeValue("gray.200", "gray.800"),
+                  outline: "none",
+                }}
+              />
+            </FormControl>
+            <Stack>
+              <Divider orientation='horizontal' />
+            </Stack>
+            <FormControl>
+              <FormLabel htmlFor='containerType'>Container Type</FormLabel>
+              <Select
+                placeholder='Select option'
+                rounded={"full"}
+                variant='filled'
+                value={containerType}
+                onChange={(e) => setContainerType(e.target.value)}
+              >
+                <option value='20" DR'>20' DR</option>
+                <option value='40" DR'>40' DR</option>
+                <option value='40" HC'>40' HC</option>
+                <option value='45" DR'>45' DR</option>
+                <option value='20" RF'>20' RF</option>
+                <option value='40" RF'>40' RF</option>
+                <option value='Other'>Other</option>
+              </Select>
+            </FormControl>
+            {/* Miles */}
+            <HStack>
+              <FormControl id='legalWeight' isRequired>
+                <FormLabel>Legal Weight</FormLabel>
+                <Select
+                  placeholder='Select option'
+                  rounded={"full"}
+                  variant='filled'
+                  value={legalWeight}
+                  onChange={(e) => setLegalWeight(e.target.value)}
+                >
+                  <option value='option1'>Yes</option>
+                  <option value='option2'>No</option>
+                </Select>
+              </FormControl>
+
+              <FormControl id='hazmat' isRequired>
+                <FormLabel>Hazmat</FormLabel>
+                <Select
+                  placeholder='Select option'
+                  rounded={"full"}
+                  variant='filled'
+                  value={isHazmat}
+                  onChange={(e) => setIsHazmat(e.target.value)}
+                >
+                  <option value='option1'>Non-Hazmat</option>
+                  <option value='option2'>Hazmat</option>
+                </Select>
+              </FormControl>
+            </HStack>
+            <Stack>
+              <Divider orientation='horizontal' />
+              <FormControl id='additionalDetails'>
+                <FormLabel>Additional Details</FormLabel>
+                <Textarea value={additionalDetails}
+                  onChange={(e) => setAdditionalDetails(e.target.value)}>
+                </Textarea>
+              </FormControl>
+              <FormControl id='hiddenTotal'>
+                <VisuallyHiddenInput value={mileage}
+                  onChange={(e) => setTotal(+e.target.value !== 0 ? +mileage * 0.71 + 2200 + 40 + 250 : 0)}>
+                </VisuallyHiddenInput>
+              </FormControl>
+            </Stack>
+          </form>
           <Text as={"u"} align={"center"} fontSize={"xl"}>
             {companyName}
           </Text>
-          <Text align={"center"}>Estimated Quote</Text>
-          <Text align={"center"}>
-            {formatter.format(
-              +mileage !== 0 ? +mileage * 0.71 + 2200 + 40 + 250 : 0
-            )}
+          <Total mileage={mileage} />
+        </Stack>
+        <Stack align={"center"}>
+          <Text>
+            <Button color='teal.500' type='submit' id="quoteForm" onClick={handleShow}>
+              Email Quote
+            </Button>
+            <Modal isOpen={show} onClose={handleClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Quote Estimate</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  We will send this quote to <strong>{email}</strong>. Press "Send Email" to continue.
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button colorScheme='red' mr={3} onClick={handleClose}>
+                    Close
+                  </Button>
+                  <Button variant='solid' colorScheme="blue" onClick={handleSubmit}>Send Email</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+          </Text>
+          <Text>
+            <Link color='teal.500' href='https://drivewithapt.com'>
+              Home
+            </Link>
           </Text>
         </Stack>
-      </Stack>
-    </Flex>
+      </Stack >
+    </Flex >
   );
 }
 
-const NotificationIcon = createIcon({
-  displayName: "Notification",
-  viewBox: "0 0 128 128",
-  path: (
-    <g id='Notification'>
-      <rect
-        className='cls-1'
-        x='1'
-        y='45'
-        fill={"#fbcc88"}
-        width='108'
-        height='82'
-      />
-      <circle className='cls-2' fill={"#8cdd79"} cx='105' cy='86' r='22' />
-      <rect
-        className='cls-3'
-        fill={"#f6b756"}
-        x='1'
-        y='122'
-        width='108'
-        height='5'
-      />
-      <path
-        className='cls-4'
-        fill={"#7ece67"}
-        d='M105,108A22,22,0,0,1,83.09,84a22,22,0,0,0,43.82,0A22,22,0,0,1,105,108Z'
-      />
-      <path
-        fill={"#f6b756"}
-        className='cls-3'
-        d='M109,107.63v4A22,22,0,0,1,83.09,88,22,22,0,0,0,109,107.63Z'
-      />
-      <path
-        className='cls-5'
-        fill={"#d6ac90"}
-        d='M93,30l16,15L65.91,84.9a16,16,0,0,1-21.82,0L1,45,17,30Z'
-      />
-      <path
-        className='cls-6'
-        fill={"#cba07a"}
-        d='M109,45,65.91,84.9a16,16,0,0,1-21.82,0L1,45l2.68-2.52c43.4,40.19,41.54,39.08,45.46,40.6A16,16,0,0,0,65.91,79.9l40.41-37.42Z'
-      />
-      <path
-        className='cls-7'
-        fill={"#dde1e8"}
-        d='M93,1V59.82L65.91,84.9a16,16,0,0,1-16.77,3.18C45.42,86.64,47,87.6,17,59.82V1Z'
-      />
-      <path
-        className='cls-8'
-        fill={"#c7cdd8"}
-        d='M74,56c-3.56-5.94-3-10.65-3-17.55a16.43,16.43,0,0,0-12.34-16,5,5,0,1,0-7.32,0A16,16,0,0,0,39,38c0,7.13.59,12-3,18a3,3,0,0,0,0,6H50.41a5,5,0,1,0,9.18,0H74a3,3,0,0,0,0-6ZM53.2,21.37a3,3,0,1,1,3.6,0,1,1,0,0,0-.42.7,11.48,11.48,0,0,0-2.77,0A1,1,0,0,0,53.2,21.37Z'
-      />
-      <path
-        className='cls-3'
-        fill={"#f6b756"}
-        d='M46.09,86.73,3,127H1v-1c6-5.62-1.26,1.17,43.7-40.78A1,1,0,0,1,46.09,86.73Z'
-      />
-      <path
-        className='cls-3'
-        fill={"#f6b756"}
-        d='M109,126v1h-2L63.91,86.73a1,1,0,0,1,1.39-1.49C111,127.85,103.11,120.51,109,126Z'
-      />
-      <path
-        className='cls-8'
-        fill={"#c7cdd8"}
-        d='M93,54.81v5L65.91,84.9a16,16,0,0,1-16.77,3.18C45.42,86.64,47,87.6,17,59.82v-5L44.09,79.9a16,16,0,0,0,21.82,0Z'
-      />
-      <path
-        className='cls-9'
-        fill={"#fff"}
-        d='M101,95c-.59,0-.08.34-8.72-8.3a1,1,0,0,1,1.44-1.44L101,92.56l15.28-15.28a1,1,0,0,1,1.44,1.44C100.21,96.23,101.6,95,101,95Z'
-      />
-      <path
-        className='cls-3'
-        fill={"#f6b756"}
-        d='M56.8,18.38a3,3,0,1,0-3.6,0A1,1,0,0,1,52,20,5,5,0,1,1,58,20,1,1,0,0,1,56.8,18.38Z'
-      />
-      <path
-        className='cls-1'
-        fill={"#fbcc88"}
-        d='M71,42.17V35.45c0-8.61-6.62-16-15.23-16.43A16,16,0,0,0,39,35c0,7.33.58,12-3,18H74A21.06,21.06,0,0,1,71,42.17Z'
-      />
-      <path
-        className='cls-3'
-        fill={"#f6b756"}
-        d='M74,53H36a21.36,21.36,0,0,0,1.86-4H72.14A21.36,21.36,0,0,0,74,53Z'
-      />
-      <path className='cls-3' fill={"#f6b756"} d='M59.59,59a5,5,0,1,1-9.18,0' />
-      <path
-        className='cls-1'
-        fill={"#fbcc88"}
-        d='M74,59H36a3,3,0,0,1,0-6H74a3,3,0,0,1,0,6Z'
-      />
-    </g>
-  ),
-});
+function Total(props: { mileage: any }) {
+  const total = formatter.format(
+    +props.mileage !== 0 ? +props.mileage * 0.71 + 2200 + 40 + 250 : 0)
+  return +props.mileage !== 0 ? (
+    <>
+      <Charges mileage={props.mileage} />
+      <Divider />
+      <Text>
+        <strong>
+          {total} Total
+        </strong>
+      </Text>
+    </>
+  ) : (
+    <Text></Text>
+  );
+}
+function Charges(props: { mileage: any }) {
+  return (
+    <Stack>
+      <Text fontSize='xs'>
+        $2,200.00 <strong>Line Haul</strong>
+      </Text>
+      <Text fontSize='xs'>
+        $220.00 <strong>FSC</strong>
+      </Text>
+      <Text fontSize='xs'>
+        $40.00 <strong>Chassis Rental Fee</strong>
+      </Text>
+      <Text fontSize='xs'>
+        $250.00 <strong>PrePull Fee</strong>
+      </Text>
+    </Stack>
+  );
+}
