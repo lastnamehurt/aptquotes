@@ -15,6 +15,8 @@ import { Logo } from "./Logo";
 import CardWithIllustration from "./components/QuoteForm";
 import VerticalLabels from "./components/Wizard";
 import { StepsStyleConfig as Steps } from "chakra-ui-steps";
+import Hero from "./components/Hero";
+import Features from "./components/Features";
 
 const theme = extendTheme({
   components: {
@@ -24,27 +26,8 @@ const theme = extendTheme({
 });
 export const App = () => (
   <ChakraProvider theme={theme}>
-    <CardWithIllustration />
-    {/* <VerticalLabels /> */}
-    {/* <Box textAlign='center' fontSize='xl'>
-      <Grid minH='100vh' p={3}>
-        <ColorModeSwitcher justifySelf='flex-end' />
-        <VStack spacing={8}>
-          <Logo h='40vmin' pointerEvents='none' />
-          <Text>
-            Edit <Code fontSize='xl'>src/App.tsx</Code> and save to reload.
-          </Text>
-          <Link
-            color='teal.500'
-            href='https://chakra-ui.com'
-            fontSize='2xl'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            Learn Chakra
-          </Link>
-        </VStack>
-      </Grid>
-    </Box> */}
+    <Hero />
+    {/* <CardWithIllustration /> */}
+    <Features />
   </ChakraProvider>
 );
