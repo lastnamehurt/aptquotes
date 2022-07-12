@@ -101,7 +101,8 @@ export default function QuoteForm() {
       }),
     };
     fetch(
-      "https://apt-quotes-api.herokuapp.com/v1/quotes/",
+      //   "https://apt-quotes-api.herokuapp.com/v1/quotes/",
+      "http://localhost:8000/v1/quotes/",
       requestOptions
     ).then((response) => {
       response.json();
@@ -123,11 +124,11 @@ export default function QuoteForm() {
 
   return (
     <Flex
-      minH={"100vh"}
+      //   minH={"100vh"}
       align={"center"}
       justify={"center"}
-      py={12}
-      //   bg={useColorModeValue("gray.50", "gray.800")}
+      //   py={12}
+      bg={useColorModeValue("gray.50", "gray.800")}
     >
       <Stack
         boxShadow={"2xl"}
@@ -340,7 +341,7 @@ export default function QuoteForm() {
                     Close
                   </Button>
                   <Button
-                    variant='solid'
+                    variant='ghost'
                     colorScheme='blue'
                     onClick={handleSubmit}
                   >

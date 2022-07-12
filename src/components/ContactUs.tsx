@@ -55,8 +55,6 @@ export default function ContactUs() {
 
   const toast = useToast();
 
-  // axios.defaults.xsrfCookieName = 'csrftoken'
-  // axios.defaults.xsrfHeaderName = 'X-CSRFToken'
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -73,17 +71,17 @@ export default function ContactUs() {
     console.log("Submitting");
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body: JSON.stringify({
-        company_name: companyName,
-        email_address: email,
-        phone_number: phoneNumber,
+        company_name: "Company Name",
+        email_address: { email },
+        phone_number: "7573011316",
       }),
     };
-    fetch(
-      "https://apt-quotes-api.herokuapp.com/v1/contact/",
-      requestOptions
-    ).then((response) => {
+    fetch("http://localhost:8000/contact/", requestOptions).then((response) => {
       response.json();
       if (response.ok) {
         clean();
@@ -103,10 +101,10 @@ export default function ContactUs() {
 
   return (
     <Flex
-      minH={"100vh"}
+      //   minH={"100vh"}
       align={"center"}
       justify={"center"}
-      py={12}
+      //   py={12}
       bg={useColorModeValue("gray.50", "gray.800")}
     >
       <Stack
@@ -126,14 +124,9 @@ export default function ContactUs() {
           >
             Contact Us
           </Heading>
-          {/* <Text fontSize={"lg"} color={"gray.500"}>
-            We understand the daily challenges drivers face. APT offers a
-            variety of schedules to promote a healthy family-work balance.
-          </Text> */}
         </Stack>
         <Stack spacing={4} direction={{ base: "column" }} w={"full"}>
-          {/* Company Name */}
-          <form id='quoteForm' onSubmit={handleSubmit}>
+          <form id='contactForm' onSubmit={handleSubmit}>
             <FormControl>
               <FormLabel htmlFor='companyName'>Name or Company</FormLabel>
               <Input
@@ -155,7 +148,7 @@ export default function ContactUs() {
               />
             </FormControl>
             {/* Email Address */}
-            <FormControl>
+            <FormControl py={3}>
               <FormLabel htmlFor='email'>Email address</FormLabel>
               <Input
                 id={"email"}
@@ -177,7 +170,7 @@ export default function ContactUs() {
               <FormHelperText>We'll never share your email.</FormHelperText>
             </FormControl>
             {/* Phone Number */}
-            <FormControl>
+            <FormControl py={3}>
               <FormLabel htmlFor='phoneNumber'>Phone number</FormLabel>
               <Input
                 id={"phoneNumber"}
@@ -198,11 +191,7 @@ export default function ContactUs() {
               />
             </FormControl>
             <Stack>
-              <Divider orientation='horizontal' />
-            </Stack>
-            <Stack>
-              <Divider orientation='horizontal' />
-              <FormControl id='additionalDetails'>
+              <FormControl py={3} id='additionalDetails'>
                 <FormLabel>Message</FormLabel>
                 <Textarea
                   value={message}
@@ -219,8 +208,9 @@ export default function ContactUs() {
           <Text>
             <Button
               color='teal.500'
+              variant='ghost'
               type='submit'
-              id='quoteForm'
+              id='contactForm'
               onClick={handleShow}
             >
               Submit
@@ -240,6 +230,7 @@ export default function ContactUs() {
                     Close
                   </Button>
                   <Button
+                    id='contactForm'
                     variant='solid'
                     colorScheme='blue'
                     onClick={handleSubmit}
@@ -250,11 +241,6 @@ export default function ContactUs() {
               </ModalContent>
             </Modal>
           </Text>
-          {/* <Text>
-            <Link color='teal.500' href='https://drivewithapt.com'>
-              Home
-            </Link>
-          </Text> */}
         </Stack>
       </Stack>
     </Flex>
