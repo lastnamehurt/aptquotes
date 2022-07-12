@@ -6,12 +6,27 @@ import {
   Image,
   Box,
   Container,
+  Button,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  useToast,
 } from "@chakra-ui/react";
 // import { Image } from "framer-motion";
 import * as React from "react";
 import banner from "../assets/images/aptlogo.png";
+import ContactUs from "./ContactUs";
+import QuoteForm from "./QuoteForm";
 
 export default function Hero() {
+  const [show, setShow] = React.useState(false);
+
+  const toast = useToast();
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
     <Flex>
       <SimpleGrid
@@ -93,8 +108,11 @@ export default function Hero() {
             accurate information from pickup to destination.
           </chakra.p>
           <Box display='inline-flex' rounded='md' shadow='md'>
-            <chakra.a
-              href='https://quote.drivewithapt.com'
+            <Button
+              type='submit'
+              id='quoteForm'
+              onClick={handleShow}
+              //   ref='https://quote.drivewithapt.com'
               mt={2}
               display='inline-flex'
               alignItems='center'
@@ -121,7 +139,15 @@ export default function Hero() {
             >
               Request a Quote
               {/* <Icon as={FiExternalLink} ml={2} /> */}
-            </chakra.a>
+            </Button>
+            <Modal isOpen={show} onClose={handleClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalCloseButton />
+
+                <QuoteForm />
+              </ModalContent>
+            </Modal>
           </Box>
         </Flex>
       </SimpleGrid>

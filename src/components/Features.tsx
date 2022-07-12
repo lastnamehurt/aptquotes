@@ -1,7 +1,71 @@
-import { Box, Button, chakra, Flex, SimpleGrid, Image } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  chakra,
+  Flex,
+  SimpleGrid,
+  Image,
+  useToast,
+  Link,
+  Text,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+} from "@chakra-ui/react";
 import * as React from "react";
+import ContactUs from "./ContactUs";
 
 export default function Features() {
+  const [show, setShow] = React.useState(false);
+
+  const toast = useToast();
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  function clean() {
+    console.log("This function should clean the form");
+  }
+
+  let handleSubmit = async (e: any) => {
+    e.preventDefault();
+    console.log("Submitting");
+    // const requestOptions = {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     company_name: companyName,
+    //     email_address: email,
+    //     phone_number: phoneNumber,
+    //   }),
+    // };
+    const requestOptions = {};
+    fetch(
+      "https://apt-quotes-api.herokuapp.com/v1/contact/",
+      requestOptions
+    ).then((response) => {
+      response.json();
+      if (response.ok) {
+        clean();
+        console.log(response);
+        handleClose();
+
+        return toast({
+          title: "Message Sent",
+          description: "A Team Member will reach out soon!",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+      }
+    });
+  };
+
   return (
     <Flex
       bg='#edf3f8'
@@ -79,10 +143,10 @@ export default function Features() {
                 md: "lg",
               }}
             >
-              ␥ Reefer ␥ container ␥ dry-van
+              ␥ Reefer ␥ Container ␥ Dry-Van
             </chakra.p>
             <Button
-              href='https://quote.drivewithapt.com'
+              //   href='https://quote.drivewithapt.com'
               w={{
                 base: "full",
                 sm: "auto",
@@ -99,10 +163,21 @@ export default function Features() {
                 },
               }}
               color='gray.100'
-              as='a'
+              //   as='a'
+              type='submit'
+              id='contactForm'
+              onClick={handleShow}
             >
               Contact Us
             </Button>
+            <Modal isOpen={show} onClose={handleClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalCloseButton />
+
+                <ContactUs />
+              </ModalContent>
+            </Modal>
           </Box>
 
           <Box
@@ -181,28 +256,43 @@ export default function Features() {
               We understand the daily challenges drivers face. APT offers a
               variety of schedules to promote a healthy family-work balance.
             </chakra.p>
-            <Button
-              href='https://quote.drivewithapt.com'
-              w={{
-                base: "full",
-                sm: "auto",
-              }}
-              size='lg'
-              bg='gray.900'
-              _dark={{
-                bg: "gray.700",
-              }}
-              _hover={{
-                bg: "gray.700",
-                _dark: {
-                  bg: "gray.600",
-                },
-              }}
-              color='gray.100'
-              as='a'
-            >
-              Sign Up
-            </Button>
+            <Stack align={"center"}>
+              <Text>
+                <Button
+                  //   href='https://quote.drivewithapt.com'
+                  type='submit'
+                  id='contactForm'
+                  onClick={handleShow}
+                  w={{
+                    base: "full",
+                    sm: "auto",
+                  }}
+                  size='lg'
+                  bg='gray.900'
+                  _dark={{
+                    bg: "gray.700",
+                  }}
+                  _hover={{
+                    bg: "gray.700",
+                    _dark: {
+                      bg: "gray.600",
+                    },
+                  }}
+                  color='gray.100'
+                  //   as='a'
+                >
+                  Sign Up
+                </Button>
+                <Modal isOpen={show} onClose={handleClose}>
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalCloseButton />
+
+                    <ContactUs />
+                  </ModalContent>
+                </Modal>
+              </Text>
+            </Stack>
           </Box>
           {/* <Box
             w='full'
@@ -213,7 +303,12 @@ export default function Features() {
               bg: "gray.700",
             }}
           ></Box> */}
-          <Image src='https://images.unsplash.com/photo-1547319784-330d3b12b3bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80' />
+          <Image
+            w='full'
+            h='full'
+            py={48}
+            src='https://images.unsplash.com/photo-1547319784-330d3b12b3bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'
+          />
         </SimpleGrid>
       </Box>
     </Flex>
