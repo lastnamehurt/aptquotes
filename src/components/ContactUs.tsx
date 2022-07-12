@@ -76,12 +76,13 @@ export default function ContactUs() {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        company_name: "Company Name",
-        email_address: { email },
-        phone_number: "7573011316",
+        name: companyName,
+        email_address: email,
+        phone_number: phoneNumber,
+        message: message
       }),
     };
-    fetch("http://localhost:8000/contact/", requestOptions).then((response) => {
+    fetch("https://api.drivewithapt.com/v1/contacts/", requestOptions).then((response) => {
       response.json();
       if (response.ok) {
         clean();

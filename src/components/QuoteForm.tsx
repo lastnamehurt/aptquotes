@@ -102,7 +102,7 @@ export default function QuoteForm() {
     };
     fetch(
       //   "https://apt-quotes-api.herokuapp.com/v1/quotes/",
-      "http://localhost:8000/v1/quotes/",
+      "https://api.drivewithapt.com/v1/quotes/",
       requestOptions
     ).then((response) => {
       response.json();

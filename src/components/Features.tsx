@@ -184,11 +184,11 @@ export default function Features() {
             w='full'
             h='full'
             py={48}
-            // bg='gray.200'
-            // _dark={{
-            //   bg: "gray.700",
-            // }}
-            // src='https://images.unsplash.com/photo-1611224097891-83220d09271a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3474&q=80'
+          // bg='gray.200'
+          // _dark={{
+          //   bg: "gray.700",
+          // }}
+          // src='https://images.unsplash.com/photo-1611224097891-83220d09271a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3474&q=80'
           >
             <Image src='https://images.unsplash.com/photo-1611224097891-83220d09271a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3474&q=80' />
           </Box>
@@ -279,7 +279,7 @@ export default function Features() {
                     },
                   }}
                   color='gray.100'
-                  //   as='a'
+                //   as='a'
                 >
                   Sign Up
                 </Button>
