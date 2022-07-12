@@ -9,6 +9,7 @@ import {
   Code,
   Grid,
   theme as baseTheme,
+  Flex,
 } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { Logo } from "./Logo";
@@ -26,7 +27,19 @@ const theme = extendTheme({
 });
 export const App = () => (
   <ChakraProvider theme={theme}>
-    <Hero />
+    <VStack
+      bg='#edf3f8'
+      _dark={{
+        bg: "#3e3e3e",
+      }}
+      p={10}
+      w='full'
+      justifyContent='center'
+      alignItems='center'
+      pos='sticky'
+    >
+      <Hero />
+    </VStack>
     {/* <CardWithIllustration /> */}
     <Features />
   </ChakraProvider>
