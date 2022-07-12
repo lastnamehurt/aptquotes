@@ -46,7 +46,7 @@ export default function Features() {
     // };
     const requestOptions = {};
     fetch(
-      "https://apt-quotes-api.herokuapp.com/v1/contact/",
+      "https://api.drivewithapt.com/v1/contact/",
       requestOptions
     ).then((response) => {
       response.json();
